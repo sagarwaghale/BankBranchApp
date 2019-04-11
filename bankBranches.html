@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Bank Branches</title>
+    <style>
+        table{ border-collapse: collapse;}
+        th,td{
+          border: 1px solid black;
+      }
+        tr :nth-child(even){background-color: #eee;}
+        tr:nth-child(odd){background-color: #fff;}
+
+      form.example input[type=text] {
+          padding: 10px;
+          font-size: 17px;
+          border: 1px solid grey;
+          float: left;
+          width: 80%;
+          background: #f1f1f1;
+      }
+
+      form.example button {
+          float: left;
+          width: 20%;
+          padding: 10px;
+          background: #2196F3;
+          color: white;
+          font-size: 17px;
+          border: 1px solid grey;
+          border-left: none;
+          cursor: pointer;
+      }
+
+      form.example button:hover {
+          background: #0b7dda;
+      }
+
+      form.example::after {
+          content: "";
+          clear: both;
+          display: table;
+      }
+      dropdown-btn{
+          padding: 10px;
+          font-size: 17px;
+          border: 1px solid grey;
+          float: left;
+          width: 80%;
+          background: #f1f1f1;
+      }
+        .search_categories{
+            font-size: 13px;
+            padding: 10px 8px 10px 14px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .search_categories .select{
+            width: 120%;
+            background:url('img/down-arrow.png') no-repeat;
+            background-position:80% center;
+        }
+
+        .search_categories .select select{
+            background: transparent;
+            line-height: 1;
+            border: 0;
+            padding: 0;
+            border-radius: 0;
+            width: 120%;
+            position: relative;
+            z-index: 10;
+            font-size: 1em;
+        }
+    </style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+</head>
+<body>
+<h1>Bank Branches</h1>
+<div ng-app="bankApp" ng-controller="bankCtrl">
+<div>
+    <span class="search_categories">
+        <select ng-model="city">
+            <option  selected="selected" label="Select"></option>
+            <option value="MUMBAI">Mumbai</option>
+            <option value="BANGALORE">Bangalore</option>
+            <option value="PUNE">Pune</option>
+            <option value="NAGPUR">Nagpur</option>
+            <option value="CHENNAI">Chennai</option>
+        </select>
+    </span>
+
+        <form class="example" style="margin:auto;max-width:300px">
+            <input type="text" placeholder="Search.." name="search2" ng-model="f">
+           <!-- <button type="submit"><i class="fa fa-search"></i></button>-->
+        </form>
+
+
+</div>
+<br>
+<table style="width: 100%">
+    <tr>
+        <th>IFSC</th>
+        <th>Bank Id</th>
+        <th>Branch</th>
+        <th>Address</th>
+        <th>City</th>
+        <th>District</th>
+        <th>State</th>
+        <th>Bank Name</th>
+    </tr>
+    <tr ng-repeat=" x in branchData | filter:f">
+        <td>{{x.ifsc}}</td>
+        <td>{{x.bank_id}}</td>
+        <td>{{x.branch}}</td>
+        <td>{{x.address}}</td>
+        <td>{{x.city}}</td>
+        <td>{{x.district}}</td>
+        <td>{{x.state}}</td>
+        <td>{{x.bank_name}}</td>
+    </tr>
+
+</table>
+</div>
+    <script>
+    var app = angular.module('bankApp',[]);
+    app.controller('bankCtrl', function ($scope,$http) {
+
+        var url = "";
+        $scope.$watch('city', function(city) {
+            if (!city) {
+
+                return;
+            }
+            var url = 'https://vast-shore-74260.herokuapp.com/banks?city=' + city ;
+
+            $http.get(url).then(function (response) {
+
+                $scope.bankBranchData = {};
+                $scope.branchData = response.data;
+                /*angular.forEach($scope.branchData,function (v , k) {
+
+            $scope.bankBranchData = v;
+            } );*/
+            });
+        });
+
+
+
+
+    });
+</script>
+
+</body>
+
+</html>
