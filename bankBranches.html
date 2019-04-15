@@ -5,7 +5,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Bank Branches</title>
     <style>
-        table{ border-collapse: collapse;}
+        table{
+            border-collapse: collapse;
+            width: 100%;
+            margin-left: 15%;
+            table-layout: fixed;
+        }
         th,td{
           border: 1px solid black;
       }
@@ -17,7 +22,8 @@
           font-size: 17px;
           border: 1px solid grey;
           float: left;
-          width: 80%;
+          width: 20%;
+          margin-left: 5%;
           background: #f1f1f1;
       }
 
@@ -77,17 +83,26 @@
             z-index: 10;
             font-size: 1em;
         }
+        .textbox{
+            padding: 10px;
+            font-size: 17px;
+            border: 1px solid grey;
+            float: left;
+            width: 20%;
+            background: #f1f1f1;
+            margin-left: 25%;
+        }
     </style>
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 
 </head>
 <body>
-<h1>Bank Branches</h1>
+<h1 style="text-align: center">Bank Branches</h1>
 <div ng-app="bankApp" ng-controller="bankCtrl">
 <div>
-    <span class="search_categories">
-        <select ng-model="city">
+    <span>
+        <select class="textbox" ng-model="city">
             <option  selected="selected" label="Select"></option>
             <option value="MUMBAI">Mumbai</option>
             <option value="BANGALORE">Bangalore</option>
@@ -97,7 +112,7 @@
         </select>
     </span>
 
-        <form class="example" style="margin:auto;max-width:300px">
+        <form class="example">
             <input type="text" placeholder="Search.." name="search2" ng-model="f">
            <!-- <button type="submit"><i class="fa fa-search"></i></button>-->
         </form>
@@ -105,7 +120,7 @@
 
 </div>
 <br>
-<table style="width: 100%">
+<table style="width: 70%">
     <tr>
         <th>IFSC</th>
         <th>Bank Id</th>
@@ -126,12 +141,19 @@
         <td>{{x.state}}</td>
         <td>{{x.bank_name}}</td>
     </tr>
+    <div data-pagination="" data-num-pages="numOfPages()"
+         data-current-page="curPage"
+         data-boundary-links="true"></div>
 
 </table>
 </div>
     <script>
     var app = angular.module('bankApp',[]);
     app.controller('bankCtrl', function ($scope,$http) {
+
+        $scope.curPage = 1;
+        $scope.itemsPerPage = 10;
+        var branchData = "";
 
         var url = "";
         $scope.$watch('city', function(city) {
@@ -143,6 +165,7 @@
 
             $http.get(url).then(function (response) {
 
+
                 $scope.bankBranchData = {};
                 $scope.branchData = response.data;
                 /*angular.forEach($scope.branchData,function (v , k) {
@@ -152,8 +175,18 @@
             });
         });
 
+      /*  //Code for pagination
+        $scope.numOfPages = function () {
+            return Math.ceil(branchData.length / $scope.itemsPerPage);
+        }
 
+        $scope.$watch('curPage + numPerPage',function () {
 
+            var begin = (($scope.curPage-1)* $scope.itemsPerPage),
+                end = begin + $scope.itemsPerPage;
+            $scope.filteredItems = branchData.slice(begin,end);
+
+        } );*/
 
     });
 </script>
